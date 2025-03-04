@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogoCraft - Create Your Custom Logo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        img {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Create Your Custom Logo</h1>
+    <input type="text" id="description" placeholder="Enter logo description">
+    <button onclick="generateLogo()">Generate Logo</button>
+    <img id="logo" src="" alt="Generated Logo" style="display: none;">
+</div>
+
+<script>
+    function generateLogo() {
+        const description = document.getElementById('description').value;
+        if (!description) {
+            alert('Please enter a description!');
+            return;
+        }
+
+        fetch('http://127.0.0.1:5000/generate_logo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description: description })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.image_url) {
+                document.getElementById('logo').src = data.image_url;
+                document.getElementById('logo').style.display = 'block';
+            } else {
+                alert('Error generating logo');
+            }
+        })
+        .catch(error => {
+            alert('Error generating logo: ' + error);
+        });
+    }
+</script>
+
+</body>
+</html>
